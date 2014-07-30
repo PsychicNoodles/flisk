@@ -1,0 +1,22 @@
+{% set title = "Login" %}
+{% set body_id = "login" %}
+{% set hide_menu = true %}
+
+{% extends "base.html" %}
+{% from "base.html" import check_errors %}
+
+{% block errors %}
+{{ check_errors({ "sess_err" : "That is not a valid session id (\"%s\"), perhaps it expired? Please log in again.", "attempt" : "That is not the correct password (\"%s\"), please try again." }) }}
+{% endblock %}
+
+{% block content %}
+	<div id="login">
+		<div class="container">
+			<form role="form" method="POST">
+				<h2>Please enter the password</h2>
+				<input type="password" name="passwd" class="form-control" placeholder="Password" required>
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+			</form>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% set title = "Gists" %}
+
+{% extends "base.html" %}
+{% from "config.html" import GLOBALS %}
+
+{% block content %}
+	<div class="container">
+		{% for gist, files, content in listings %}
+		<ul class="list-group">
+			<li class="list-group-item gist"><a href="/gist/{{gist.id}}">{{gist.title}}</a> by {{gist.author}}</li>
+			{% for f in files %}
+			<li class="list-group-item file">
+				<pre>
+					{% with ext = f.filename.split("/")[-1].split(".")[1:].join(".") %}
+					<code class="language-{% if ext in GLOBALS.prism_exts.keys() %}{{GLOBALS.prism_exts[ext]}}{% else %}{{ext}}{% endif %}">
+						{{content}}
+					</code>
+					{% endwith %}
+				</pre>
+			</li>
+			{% endfor %}
+		</ul>
+		{% endfor %}
+	</div>
+{% endblock %}

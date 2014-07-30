@@ -1,0 +1,36 @@
+{% from "config.html" import GLOBALS %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{GLOBALS["base_title"]}} - {{title}}</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+	{% block head %}{% endblock %}
+</head>
+<body{% if body_id %} id="{{body_id}}"{% endif %}>{# be careful messing around with body_id #}
+	{% if not hide_menu %}{% include "menu.html" %}{% endif %}
+
+	<ul id="errors">
+		<!--I'm not sure why, but there's a lot of whitespace here for no reason-->
+	{% block errors %}{%- endblock %}
+	</ul>
+
+	{% block content %}
+	<h3>If you see this, that means something went wrong!</h3>
+	{% endblock %}
+</body>
+</html>
+{% macro err_item(cat, msg) %}
+		<li id="{{cat}}" class="bg-danger">{{msg}}</li>
+{%- endmacro %}
+{% macro check_errors(errs) %}
+{# takes a map of {category : format string (passed the message)} #}
+	{% with messages = get_flashed_messages(with_categories = true) %}
+		{% for cat, msg in messages %}
+			{% if cat in errs.keys() %}
+				{{ err_item(cat, errs[cat] % msg|e) }}
+			{%- endif %}
+		{%- endfor %}
+	{%- endwith %}
+{%- endmacro %}
